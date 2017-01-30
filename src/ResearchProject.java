@@ -86,7 +86,11 @@ public class ResearchProject {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
+	public int getStatus(){
+		return this.status;
+	}
+	
 	public String statusToString(){
 		if(this.status == 1) return "In Preparation Phase";
 		else if(this.status == 2) return "In Development Phase";

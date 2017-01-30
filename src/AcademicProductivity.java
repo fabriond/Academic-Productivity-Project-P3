@@ -29,7 +29,7 @@ public class AcademicProductivity {
 			System.out.println("  4 - Add Professor");
 			System.out.println("  5 - Add Student");
 			System.out.println("  6 - Add Researcher");
-			System.out.println("  7 - Remove Collaborator");
+			System.out.println("  7 - Academic Production Report");
 
 			System.out.println("  11 - Close \n");
 			
@@ -70,6 +70,25 @@ public class AcademicProductivity {
 			}
 			
 			else if(menuOption == 7){
+				System.out.println("Collaborator Count: "+collaboratorCount);
+				int inPreparationProjects = 0, inDevelopmentProjects = 0, concludedProjects = 0;
+				for(int i = 0; i < projectCount; i++){
+					
+					if(projects.get(i).getStatus() == 1){
+						inPreparationProjects++;
+					}
+					else if(projects.get(i).getStatus() == 2){
+						inDevelopmentProjects++;
+					}
+					else{
+						concludedProjects++;
+					}
+					
+				}
+				System.out.println("Projects In Preparation Phase: "+inPreparationProjects);
+				System.out.println("Projects In Development Phase: "+inDevelopmentProjects);
+				System.out.println("Projects Concluded: "+concludedProjects);
+				System.out.println("Total Projects: "+projectCount);
 				
 			}
 		
