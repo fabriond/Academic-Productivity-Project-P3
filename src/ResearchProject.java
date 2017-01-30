@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class ResearchProject {
 	
-	@SuppressWarnings("unused")
 	private Integer projectId;
 	
 	private String title;
@@ -26,6 +25,10 @@ public class ResearchProject {
 	public void setProjectId(Integer id){
 		this.projectId = id;
 		return;
+	}
+	
+	public Integer getProjectId(){
+		return projectId;
 	}
 	
 	public String getTitle() {

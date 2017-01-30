@@ -5,7 +5,7 @@ abstract class Person{
 	private Integer id;
 	private String name;
 	private String email;
-	private String type;
+	protected String type;
 	protected ArrayList<Integer> projects = new ArrayList<Integer>();
 	
 	public void setId(Integer id){
@@ -51,9 +51,17 @@ abstract class Person{
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	public void addProject(Integer projectId){
-		this.projects.add(projectId);
+	
+	public boolean addProject(Integer projectId){
+		if(!this.projects.contains(projectId)){
+			this.projects.add(projectId);	
+			return true;
+		}
+		else{
+			System.out.println("This collaborator is already in the selected project!");
+			return false;
+		}
+		
 	}
 
 }
