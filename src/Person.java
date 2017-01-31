@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-abstract class Person{
+public class Person{
 	
 	private Integer id;
 	private String name;

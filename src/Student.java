@@ -9,7 +9,8 @@ public class Student extends Person{
 		this.studentType = type;
 	}	
 	
-	public boolean addProject(int projectId, int i){
+	@Override
+	public boolean addProject(Integer projectId){
 		
 		if(this.studentType == 1 && this.activeProjects >= 2){
 			System.out.println("This collaborator cannot participate in any more projects!");

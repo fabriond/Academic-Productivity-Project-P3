@@ -29,8 +29,7 @@ public class AcademicProductivity {
 			System.out.println("  4 - Add Professor");
 			System.out.println("  5 - Add Student");
 			System.out.println("  6 - Add Researcher");
-			System.out.println("  7 - Academic Production Report");
-
+			System.out.println("  7 - Academic Productivity Report");
 			System.out.println("  11 - Close \n");
 			
 			menuOption = scan.nextInt();
@@ -116,15 +115,15 @@ public class AcademicProductivity {
 		scan.nextLine();
 		newProject.setObjective(scan.nextLine());
 		System.out.print("Description: ");
-		newProject.setDescription(scan.nextLine());
+		newProject.setDescription(scan.nextLine());		
 		System.out.println("Professor List: ");
 		for(int i = 0; i < collaboratorCount; i++){
 			if(collaborators.get(i).getType().equals("Professor")){
 				System.out.printf("  ID: %03d", collaborators.get(i).getId());
 				System.out.println(" | Name: "+collaborators.get(i).getName()+" | Email: "+collaborators.get(i).getEmail());
 			}
-			System.out.println("");
 		}
+		System.out.println("");
 		System.out.print("Project's Professor ID: ");
 		int professorId = scan.nextInt();
 		newProject.addProfessor(professorId);
@@ -256,9 +255,10 @@ public class AcademicProductivity {
 					}
 					
 				}
-				else if(binarySearchStudents(students, 0, students.size(), collabId).addProject(projectId, 0)){
+				else if(((Student) collaborators.get(collabId)).addProject(projectId)){
 					projects.get(projectId).addStudent(collabId);
 				}
+				
 			}
 			else System.out.println("This project is no longer in preparation phase and cannot add more collaborators!");
 		}
@@ -276,13 +276,6 @@ public class AcademicProductivity {
 			System.out.println(collaborators.get(i).projects);
 		}
 		System.out.println("");
-	}
-	
-	public static Student binarySearchStudents(ArrayList<Student> array,int start, int end, int search){
-		int middle = start+end/2;
-		if(array.get(middle).getId() > search) binarySearchStudents(array, middle, end, search);
-		else if(array.get(middle).getId() < search) binarySearchStudents(array, start, middle, search);
-		return array.get(middle);
 	}
 	
 }
