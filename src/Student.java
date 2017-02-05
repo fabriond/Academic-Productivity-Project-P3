@@ -10,22 +10,22 @@ public class Student extends Person{
 	}	
 	
 	@Override
-	public boolean addProject(Integer projectId){
+	public boolean addProject(ResearchProject project){
 		
 		if(this.studentType == 1 && this.activeProjects >= 2){
 			System.out.println("This collaborator cannot participate in any more projects!");
 			return false;
 		}
-		else if(this.projects.contains(projectId)){
+		else if(this.projects.contains(project)){
 			System.out.println("This collaborator is already in the selected project!");
 			return false;
 		}
 		else if(this.studentType == 1 && this.activeProjects < 2){
 			this.activeProjects++;
-			System.out.println("God Damnit");
 		}
-			
-		this.projects.add(projectId);
+		
+		this.projects.add(project);
+		this.projects2.put(project.getEndDateCode(), project);
 		return true;	
 		
 	}
