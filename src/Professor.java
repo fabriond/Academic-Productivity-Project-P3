@@ -2,7 +2,7 @@
 public class Professor extends Person{
 	
 	Professor(){
-		this.type = "Professor";
+		this.setType("Professor");
 	}
 	
 }

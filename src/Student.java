@@ -5,7 +5,7 @@ public class Student extends Person{
 	private int studentType;// 1 - Bachelor, 2 - Master, 3 - PhD
 	
 	Student(int type){
-		this.type = "Student";
+		this.setType("Student");
 		this.studentType = type;
 	}	
 	

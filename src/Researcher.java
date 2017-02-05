@@ -2,7 +2,7 @@
 public class Researcher extends Person{
 	
 	Researcher(){
-		this.type = "Researcher";	
+		this.setType("Researcher");	
 	}
 	
 }

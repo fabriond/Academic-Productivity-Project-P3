@@ -1,9 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-//List<Float> unindexedVectors = new ArrayList<Float>();
-//nome, e-mail, um histórico contendo a lista de projetos nos quais este colaborador participou, incluindo os projetos em andamento ordenados de forma decrescente
-//pela data de término, incluindo também a lista de sua produção acadêmica.
-
 
 public class AcademicProductivity {
 	
@@ -59,6 +55,7 @@ public class AcademicProductivity {
 			
 			else if(menuOption == 3){
 				if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
+				else if(projectCount == 0) System.out.println("You should create a project first!"); 
 				else newProduction();				
 			}
 			else if(menuOption == 4){
@@ -122,16 +119,15 @@ public class AcademicProductivity {
 		newProject.setObjective(scan.nextLine());
 		System.out.print("Description: ");
 		newProject.setDescription(scan.nextLine());		
-		System.out.println("Professor List: ");
-		for(int i = 0; i < collaboratorCount; i++){
-			if(collaborators.get(i).getType().equals("Professor")){
-				System.out.printf("  ID: %03d", collaborators.get(i).getId());
-				System.out.println(" | Name: "+collaborators.get(i).getName()+" | Email: "+collaborators.get(i).getEmail());
-			}
-		}
-		System.out.println("");
-		System.out.print("Project's Professor ID: ");
+		
+		printCollaboratorsByType("Professor");
+		System.out.print("ID of the Associated Professor: ");
 		int professorId = scan.nextInt();
+		while(!professors.contains(collaborators.get(professorId))){
+			System.out.println("ID Not Valid!");
+			System.out.print("ID of the Associated Professor: ");
+			professorId = scan.nextInt();
+		}
 		newProject.addProfessor(professorId);
 		collaborators.get(professorId).addProject(newProject);
 		projectCount++;
@@ -287,13 +283,19 @@ public class AcademicProductivity {
 			System.out.println("  10 - Back");
 		}
 		
-		if(projects.get(projectId).getStatus() == 2){
+		else if(projects.get(projectId).getStatus() == 2){
 			System.out.println("\nProject already in development phase, only the status can be changed");
 			System.out.println("  1 - Change Status");
 			System.out.println("  2 - Back");
 		}
 		
+		else{
+			System.out.println("Projects already concluded cannot be changed!");
+			return;
+		}
+		
 		int answer = scan.nextInt();
+		
 		if(projects.get(projectId).getStatus() == 2){
 			if(answer == 1){
 				projects.get(projectId).changeStatus();
@@ -403,7 +405,7 @@ public class AcademicProductivity {
 		System.out.println("Collaborators List: ");
 		for(int i = 0; i < collaboratorCount; i++){
 			System.out.printf("  ID: %03d", collaborators.get(i).getId());
-			System.out.println(" | Name: "+collaborators.get(i).getName()+" | Email: "+collaborators.get(i).getEmail());
+			System.out.println(" | Name: "+collaborators.get(i).getName()+" | Email: "+collaborators.get(i).getEmail()+" | Type: "+collaborators.get(i).getType());
 			//System.out.println(collaborators.get(i).projects);
 		}
 		System.out.println("");
