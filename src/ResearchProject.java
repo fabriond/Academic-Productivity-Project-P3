@@ -167,7 +167,7 @@ public class ResearchProject {
 	
 	public void printProject(ArrayList<Person> allCollaborators){
 		
-		System.out.println("Title: "+this.title+" | Current Status: "+this.statusToString()+"\n");
+		System.out.println("\nTitle: "+this.title+" | Current Status: "+this.statusToString()+"\n");
 		System.out.println("Starting Date: "+this.startDate+" | End Date: "+this.endDate);
 		System.out.println("Financial Agency: "+this.financialAgency+" | Financed Value: "+this.financedValue);
 		System.out.println("Objective: "+this.objective+" | Description: "+this.description);
@@ -183,6 +183,7 @@ public class ResearchProject {
 		}
 		System.out.println("\nRelated Academic Productions: ");
 		this.printProductions();
+		System.out.println("");
 		return;
 		
 	}
@@ -191,10 +192,10 @@ public class ResearchProject {
 	public String toString(){
 		String end = new String();
 		if(this.status == 3){
-			end = "Project ID: "+this.projectId+" | Title: "+this.title+" | Current Status: "+this.statusToString();
+			end = "  Title: "+this.title+" | Current Status: "+this.statusToString();
 		}
 		else{
-			end = "Project ID: "+this.projectId+" | Title: "+this.title+" | Current Status: "+this.statusToString()+" | End Date: "+this.endDate;
+			end = "  Title: "+this.title+" | Current Status: "+this.statusToString()+" | End Date: "+this.endDate;
 		}
 		
 		return end;

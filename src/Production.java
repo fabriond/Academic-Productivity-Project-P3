@@ -48,7 +48,7 @@ public class Production {
 	}
 	
 	public String toString(){
-		return "Title: "+this.title+" Conference: "+this.conference+" Year of Publication: "+this.date;
+		return "  Title: "+this.title+" | Conference: "+this.conference+" | Year of Publication: "+this.date;
 	}
 	
 }

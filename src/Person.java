@@ -88,6 +88,7 @@ public class Person{
 		this.printProjects();
 		System.out.println("\nAcademic Productions: ");
 		this.printProductions();
+		System.out.println("");
 		return;
 	}
 	
@@ -99,5 +100,9 @@ public class Person{
 		productions.stream().sorted(byPublishmentDate).forEach(i -> System.out.println(i));
 	}
 	
-
+	@Override
+	public String toString(){		
+		return "Name: "+this.name+" | Email: "+this.email;
+	}
+	
 }

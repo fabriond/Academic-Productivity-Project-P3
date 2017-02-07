@@ -8,6 +8,7 @@ public class AcademicProductivity {
 	static int collaboratorCount = 0;
 	static int productionCount = 0;
 	static int supervisedProductionCount = 0;
+	static int validProjects = 0;
 	static ArrayList<Professor> professors = new ArrayList<Professor>();
 	static ArrayList<Student> students = new ArrayList<Student>();
 	static ArrayList<Researcher> researchers = new ArrayList<Researcher>();
@@ -47,7 +48,7 @@ public class AcademicProductivity {
 			else if(menuOption == 2 && projectCount > 0){
 				if(projectCount == 0) System.out.println("You should create a project first!");
 				else {
-					printProjects(1);
+					printProjects(1, 2);
 					System.out.print("ID of the project you'd like to edit: ");
 					editProject(scan.nextInt());
 				}
@@ -55,7 +56,6 @@ public class AcademicProductivity {
 			
 			else if(menuOption == 3){
 				if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
-				else if(projectCount == 0) System.out.println("You should create a project first!"); 
 				else newProduction();				
 			}
 			else if(menuOption == 4){
@@ -151,23 +151,26 @@ public class AcademicProductivity {
 		newProduction.setConference(scan.nextLine());
 		System.out.print("Year of Publication: ");
 		newProduction.setDate(scan.nextInt());
-		System.out.println("Is there a research project associated with this production?");
-		System.out.println("  1 - Yes");
-		System.out.println("  2 - No");
-		if(scan.nextInt() == 1){
-			printProjects(2);
-			System.out.print("ID of the Associated Project: ");
-			int projectId = scan.nextInt();
-			while(projects.get(projectId).getStatus() != 2){
-				System.out.println("Project Not Valid!");
+		if(validProjects != 0){
+			System.out.println("Is there a research project associated with this production?");
+			System.out.println("  1 - Yes");
+			System.out.println("  2 - No");
+			if(scan.nextInt() == 1){
+				printProjects(2);
 				System.out.print("ID of the Associated Project: ");
-				projectId = scan.nextInt();
-			}
-			
-			if(projects.get(projectId).addProduction(newProduction)){
-					newProduction.setProjectId(projectId);
+				int projectId = scan.nextInt();
+				while(projects.get(projectId).getStatus() != 2){
+					System.out.println("Project Not Valid!");
+					System.out.print("ID of the Associated Project: ");
+					projectId = scan.nextInt();
+				}
+				
+				if(projects.get(projectId).addProduction(newProduction)){
+						newProduction.setProjectId(projectId);
+				}
 			}
 		}
+		else System.out.println("\nNo projects in development so this production cannot be associated with a project!\n");
 		
 		if(answer == 2){
 			printCollaboratorsByType("Professor");
@@ -181,7 +184,7 @@ public class AcademicProductivity {
 			collaborators.get(professorId).addProduction(newProduction);
 			int option = 1;
 			while(option == 1){
-				System.out.println("Add More Students?");
+				System.out.println("\nAdd More Students?");
 				System.out.println("  1 - Yes");
 				System.out.println("  2 - No");
 				option = scan.nextInt();
@@ -198,10 +201,11 @@ public class AcademicProductivity {
 				}
 			}
 		}
+		
 		else{
 			int option = 1;
 			while(option == 1){
-				System.out.println("Add More Collaborators?");
+				System.out.println("\nAdd More Collaborators?");
 				System.out.println("  1 - Yes");
 				System.out.println("  2 - No");
 				option = scan.nextInt();
@@ -284,9 +288,10 @@ public class AcademicProductivity {
 		}
 		
 		else if(projects.get(projectId).getStatus() == 2){
-			System.out.println("\nProject already in development phase, only the status can be changed");
+			System.out.println("\nProject already in development phase, what would you like to edit?");
 			System.out.println("  1 - Change Status");
-			System.out.println("  2 - Back");
+			System.out.println("  2 - Associate Existing Production");
+			System.out.println("  3 - Back");
 		}
 		
 		else{
@@ -298,10 +303,24 @@ public class AcademicProductivity {
 		
 		if(projects.get(projectId).getStatus() == 2){
 			if(answer == 1){
+				validProjects--;
 				projects.get(projectId).changeStatus();
 				ArrayList<Integer> studentIds = projects.get(projectId).getStudentsList();
 				for(int i = 0; i < studentIds.size(); i++){
 					((Student)collaborators.get(studentIds.get(i))).removeActiveProject();
+				}
+			}
+			else if(answer == 2){
+				printProductions();
+				System.out.print("ID of the Associated Production: ");
+				int productionId = scan.nextInt();
+				while(!productions.contains(productions.get(productionId))){
+					System.out.println("ID Not Valid!");
+					System.out.print("ID of the Associated Production: ");
+					productionId = scan.nextInt();
+				}
+				if(projects.get(projectId).addProduction(productions.get(productionId))){
+					productions.get(productionId).setProjectId(projectId);
 				}
 			}
 			else return;
@@ -374,6 +393,7 @@ public class AcademicProductivity {
 		}
 		else if(answer == 9){
 			projects.get(projectId).changeStatus();
+			validProjects++;
 		}
 		
 	}
@@ -432,6 +452,26 @@ public class AcademicProductivity {
 				System.out.printf("  ID: %03d", projects.get(i).getProjectId());
 				System.out.println(" | Title: "+projects.get(i).getTitle()+" | Description: "+projects.get(i).getDescription());
 			}
+		}
+		System.out.println("");
+	}
+	
+	public static void printProjects(int status1, int status2){
+		System.out.println("Projects List: ");
+		for(int i = 0; i < projectCount; i++){
+			if(projects.get(i).getStatus() == status1 || projects.get(i).getStatus() == status2){
+				System.out.printf("  ID: %03d", projects.get(i).getProjectId());
+				System.out.println(" | Title: "+projects.get(i).getTitle()+" | Current Status: "+projects.get(i).statusToString()+" | Description: "+projects.get(i).getDescription());
+			}
+		}
+		System.out.println("");
+	}
+	
+	public static void printProductions(){
+		System.out.println("Productions List: ");
+		for(int i = 0; i < productionCount; i++){
+			System.out.printf("  ID: %03d", productions.get(i).getId());
+			System.out.println(" | Title: "+productions.get(i).getTitle()+" | Description: "+productions.get(i).getDate());
 		}
 		System.out.println("");
 	}
