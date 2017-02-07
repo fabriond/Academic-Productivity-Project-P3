@@ -157,6 +157,19 @@ public class ResearchProject {
 		
 	}
 	
+	public boolean removeProduction(Production newProduction){
+		
+		if(this.productions.contains(newProduction)){
+			this.productions.remove(newProduction);
+			return true;
+		}
+		else{
+			System.out.println("Production not associated with the selected project!");
+			return false;
+		}
+		
+	}
+	
 	public void printProductions(){
 		productions.stream().sorted(byPublishmentDate).forEach(i -> System.out.println(i));		
 	}

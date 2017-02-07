@@ -320,6 +320,11 @@ public class AcademicProductivity {
 					productionId = scan.nextInt();
 				}
 				if(projects.get(projectId).addProduction(productions.get(productionId))){
+					if(productions.get(productionId).getProjectId() != null){
+						projects.get(productions.get(productionId).getProjectId()).removeProduction(productions.get(productionId));
+						System.out.println("Production dissociated of it's old project and associated to the new one!");
+					}
+					else System.out.println("Production associated with the project!");
 					productions.get(productionId).setProjectId(projectId);
 				}
 			}
@@ -419,6 +424,7 @@ public class AcademicProductivity {
 		System.out.println("Total Projects: "+projectCount);
 		System.out.println("Published Productions: "+(productionCount-supervisedProductionCount));
 		System.out.println("Supervised Productions: "+supervisedProductionCount);
+		System.out.println("");
 	}
 	
 	public static void printCollaborators(){
