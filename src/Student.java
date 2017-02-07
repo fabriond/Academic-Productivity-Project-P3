@@ -25,7 +25,6 @@ public class Student extends Person{
 		}
 		
 		this.projects.add(project);
-		this.projects2.put(project.getEndDateCode(), project);
 		return true;	
 		
 	}

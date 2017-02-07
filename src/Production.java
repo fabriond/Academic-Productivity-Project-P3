@@ -31,7 +31,7 @@ public class Production {
 		this.conference = conference;
 	}
 
-	public int getDate() {
+	public Integer getDate() {
 		return date;
 	}
 

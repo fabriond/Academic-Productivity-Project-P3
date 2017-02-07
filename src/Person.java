@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Comparator;
 
 public class Person{
 	
@@ -10,8 +8,10 @@ public class Person{
 	private String email;
 	protected String type;
 	protected ArrayList<ResearchProject> projects = new ArrayList<ResearchProject>();
-	protected SortedMap<Integer, ResearchProject> projects2 = new TreeMap<Integer, ResearchProject>();
-	private SortedMap<Integer, Production> productions = new TreeMap<Integer, Production>();
+	private Comparator<ResearchProject> byEndDate = (project1, project2) -> project2.getEndDateCode().compareTo(project1.getEndDateCode());
+	
+	private ArrayList<Production> productions = new ArrayList<Production>();	
+	private Comparator<Production> byPublishmentDate = (production1, production2) -> production2.getDate().compareTo(production1.getDate());
 	
 	public void setId(Integer id){
 		
@@ -60,7 +60,6 @@ public class Person{
 	public boolean addProject(ResearchProject project){
 		if(!this.projects.contains(project)){
 			this.projects.add(project);
-			this.projects2.put(project.getEndDateCode(), project);
 			return true;
 		}
 		else{
@@ -72,8 +71,8 @@ public class Person{
 	
 	public boolean addProduction(Production newProduction){
 		
-		if(!this.productions.containsValue(newProduction)){
-			this.productions.put(newProduction.getDate(), newProduction);
+		if(!this.productions.contains(newProduction)){
+			this.productions.add(newProduction);
 			return true;
 		}
 		else{
@@ -93,27 +92,11 @@ public class Person{
 	}
 	
 	public void printProjects(){
-		Set<Integer> keys = this.projects2.keySet();
-		Integer[] array = new Integer[keys.size()];
-		array = keys.toArray(array);
-		for(int i = 0; i < keys.size(); i++){
-			if(this.projects2.get(array[i]).getStatus() != 3) System.out.println("  "+this.projects2.get(array[i]).toString());
-		}
-		for(int i = 0; i < keys.size(); i++){
-			if(this.projects2.get(array[i]).getStatus() == 3) System.out.println("  "+this.projects2.get(array[i]).toString());
-		}
-		
+		projects.stream().sorted(byEndDate).forEach(i -> System.out.println(i));
 	}
 	
 	public void printProductions(){
-		Set<Integer> keys = this.productions.keySet();
-		Integer[] array = new Integer[keys.size()];
-		array = keys.toArray(array);
-		//System.out.println(this.productions.values().toString());
-		for(int i = 0; i < keys.size(); i++){
-			System.out.println("  "+this.productions.get(array[i]).toString());
-		}	
-		
+		productions.stream().sorted(byPublishmentDate).forEach(i -> System.out.println(i));
 	}
 	
 

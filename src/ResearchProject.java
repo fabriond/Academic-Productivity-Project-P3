@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Comparator;
 
 public class ResearchProject {
 	
@@ -14,7 +12,9 @@ public class ResearchProject {
 	private double financedValue;
 	private String objective;
 	private String description;
-	private SortedMap<Integer, Production> productions = new TreeMap<Integer, Production>();
+
+	private ArrayList<Production> productions = new ArrayList<Production>();
+	private Comparator<Production> byPublishmentDate = (production1, production2) -> production2.getDate().compareTo(production1.getDate());
 	
 	
 	private ArrayList<Integer> professors = new ArrayList<Integer>();
@@ -64,7 +64,7 @@ public class ResearchProject {
 		this.setEndDateCode(Integer.parseInt(day) + Integer.parseInt(month)*30 + Integer.parseInt(year)*365);
 	}
 
-	public int getEndDateCode() {
+	public Integer getEndDateCode() {
 		return endDateCode;
 	}
 
@@ -146,8 +146,8 @@ public class ResearchProject {
 	
 	public boolean addProduction(Production newProduction){
 		
-		if(!this.productions.containsValue(newProduction)){
-			this.productions.put(newProduction.getDate(), newProduction);
+		if(!this.productions.contains(newProduction)){
+			this.productions.add(newProduction);
 			return true;
 		}
 		else{
@@ -158,13 +158,7 @@ public class ResearchProject {
 	}
 	
 	public void printProductions(){
-		Set<Integer> keys = this.productions.keySet();
-		Integer[] array = new Integer[keys.size()];
-		array = keys.toArray(array);
-		for(int i = 0; i < keys.size(); i++){
-			System.out.println("  "+this.productions.get(array[i]).toString());
-		}	
-		
+		productions.stream().sorted(byPublishmentDate).forEach(i -> System.out.println(i));		
 	}
 	
 	public ArrayList<Integer> getStudentsList(){
