@@ -47,8 +47,13 @@ public class ResearchProject {
 		return startDate;
 	}
 
+	@SuppressWarnings("unused")
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+		String[] parts = startDate.split("/");
+		String day = parts[0];
+		String month = parts[1];
+		String year = parts[2];
 	}
 
 	public String getEndDate() {
@@ -180,7 +185,7 @@ public class ResearchProject {
 	
 	public void printProject(ArrayList<Person> allCollaborators){
 		
-		System.out.println("\nTitle: "+this.title+" | Current Status: "+this.statusToString()+"\n");
+		System.out.println("\nTitle: "+this.title+" | Current Status: "+this.statusToString());
 		System.out.println("Starting Date: "+this.startDate+" | End Date: "+this.endDate);
 		System.out.println("Financial Agency: "+this.financialAgency+" | Financed Value: "+this.financedValue);
 		System.out.println("Objective: "+this.objective+" | Description: "+this.description);
@@ -203,15 +208,8 @@ public class ResearchProject {
 	
 	@Override
 	public String toString(){
-		String end = new String();
-		if(this.status == 3){
-			end = "  Title: "+this.title+" | Current Status: "+this.statusToString();
-		}
-		else{
-			end = "  Title: "+this.title+" | Current Status: "+this.statusToString()+" | End Date: "+this.endDate;
-		}
 		
-		return end;
+		return "  Title: "+this.title+" | Current Status: "+this.statusToString()+" | End Date: "+this.endDate;
 		
 	}
 	

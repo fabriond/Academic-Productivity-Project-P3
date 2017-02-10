@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class AcademicProductivity {
 	
@@ -33,73 +34,88 @@ public class AcademicProductivity {
 			System.out.println("  8 - Search Collaborator");
 			System.out.println("  9 - Search Project");
 			System.out.println("  10 - Close \n");
+			try{
+				menuOption = scan.nextInt();
+	
+				if(menuOption == 0){
+					printCollaborators();	
+				}
 			
-			menuOption = scan.nextInt();
-
-			if(menuOption == 0){
-				printCollaborators();	
-			}
-		
-			else if(menuOption == 1){
-				if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
-				else newProject();				
-			}
-			
-			else if(menuOption == 2 && projectCount > 0){
-				if(projectCount == 0) System.out.println("You should create a project first!");
-				else {
-					printProjects(1, 2);
-					System.out.print("ID of the project you'd like to edit: ");
-					editProject(scan.nextInt());
+				else if(menuOption == 1){
+					if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
+					else newProject();				
+				}
+				
+				else if(menuOption == 2 && projectCount > 0){
+					if(projectCount == 0) System.out.println("You should create a project first!");
+					else {
+						printProjects(1, 2);
+						System.out.print("ID of the project you'd like to edit: ");
+						editProject(scan.nextInt());
+					}
+				}
+				
+				else if(menuOption == 3){
+					if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
+					else newProduction();				
+				}
+				else if(menuOption == 4){
+					newProfessor();
+				}
+				
+				else if(menuOption == 5){
+					newStudent();	
+				}
+				
+				else if(menuOption == 6){
+					newResearcher();
+				}
+				
+				else if(menuOption == 7){
+					productivityReport();
+				}
+				
+				else if(menuOption == 8){
+					if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
+					else{
+						printCollaborators();
+						int collabId = searchCollabIdConfirmation();
+						System.out.println("");
+						collaborators.get(collabId).printCollaborator();
+					}
+				}
+				
+				else if(menuOption == 9){
+					if(projectCount == 0) System.out.println("You should create a project first!");
+					else{
+						printProjects(0);
+						int projectId = searchProjectIdConfirmation();
+						System.out.println("");
+						projects.get(projectId).printProject(collaborators);	
+					}
+				}
+				
+				else if(menuOption != 10){
+					System.out.println("Entry not valid, try again!\n");
 				}
 			}
-			
-			else if(menuOption == 3){
-				if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
-				else newProduction();				
+			catch(ArrayIndexOutOfBoundsException e){
+				System.out.println("\nInvalid Date Format!");
+				System.out.println("Date Format: DD/MM/YYYY\n");
 			}
-			else if(menuOption == 4){
-				newProfessor();
+			catch(InputMismatchException e){
+				System.out.println("\nEntry not valid, try again!\n");
+				scan.nextLine();
 			}
-			
-			else if(menuOption == 5){
-				newStudent();	
+			catch(IndexOutOfBoundsException e){
+				System.out.println("\nID not valid, try again!\n");
 			}
-			
-			else if(menuOption == 6){
-				newResearcher();
-			}
-			
-			else if(menuOption == 7){
-				productivityReport();
-			}
-			
-			else if(menuOption == 8){
-				if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
-				else{
-					printCollaborators();
-					System.out.print("Collaborator's ID: ");
-					int collabId = scan.nextInt();
-					collaborators.get(collabId).printCollaborator();
-				}
-			}
-			
-			else if(menuOption == 9){
-				if(projectCount == 0) System.out.println("You should create a project first!");
-				else{
-					printProjects(0);
-					System.out.print("Project's ID: ");
-					int projectId = scan.nextInt();
-					projects.get(projectId).printProject(collaborators);	
-				}
-			}
-		
 		}
 	
 	
 	}
 	
-	public static void newProject(){
+	public static void newProject() throws ArrayIndexOutOfBoundsException, InputMismatchException, IndexOutOfBoundsException{
 		
 		ResearchProject newProject = new ResearchProject();
 		newProject.setProjectId(projectCount);
@@ -119,14 +135,11 @@ public class AcademicProductivity {
 		newProject.setObjective(scan.nextLine());
 		System.out.print("Description: ");
 		newProject.setDescription(scan.nextLine());		
-		
 		printCollaboratorsByType("Professor");
-		System.out.print("ID of the Associated Professor: ");
-		int professorId = scan.nextInt();
+		int professorId = idConfirmation("Professor");
 		while(!professors.contains(collaborators.get(professorId))){
 			System.out.println("ID Not Valid!");
-			System.out.print("ID of the Associated Professor: ");
-			professorId = scan.nextInt();
+			professorId = idConfirmation("Professor");
 		}
 		newProject.addProfessor(professorId);
 		collaborators.get(professorId).addProject(newProject);
@@ -135,13 +148,18 @@ public class AcademicProductivity {
 		
 	}
 	
-	public static void newProduction(){
+	public static void newProduction() throws InputMismatchException, IndexOutOfBoundsException{
 		
 		System.out.println("Production Type: ");
 		System.out.println("  1 - Published Production");
 		System.out.println("  2 - Supervised Production");
 		int answer = scan.nextInt();
+		while(answer != 1 && answer != 2){
+			System.out.println("Entry not valid, try again!\n");
+			return;
+		}		
 		if(answer == 2) supervisedProductionCount++;
+		
 		Production newProduction = new Production();
 		newProduction.setId(productionCount);
 		System.out.print("Title: ");
@@ -151,6 +169,7 @@ public class AcademicProductivity {
 		newProduction.setConference(scan.nextLine());
 		System.out.print("Year of Publication: ");
 		newProduction.setDate(scan.nextInt());
+		
 		if(validProjects != 0){
 			System.out.println("Is there a research project associated with this production?");
 			System.out.println("  1 - Yes");
@@ -158,11 +177,10 @@ public class AcademicProductivity {
 			if(scan.nextInt() == 1){
 				printProjects(2);
 				System.out.print("ID of the Associated Project: ");
-				int projectId = scan.nextInt();
+				int projectId = projectIdConfirmation();
 				while(projects.get(projectId).getStatus() != 2){
 					System.out.println("Project Not Valid!");
-					System.out.print("ID of the Associated Project: ");
-					projectId = scan.nextInt();
+					projectId = projectIdConfirmation();
 				}
 				
 				if(projects.get(projectId).addProduction(newProduction)){
@@ -174,28 +192,25 @@ public class AcademicProductivity {
 		
 		if(answer == 2){
 			printCollaboratorsByType("Professor");
-			System.out.print("ID of the Associated Professor: ");
-			int professorId = scan.nextInt();
+			int professorId = idConfirmation("Professor");
 			while(!professors.contains(collaborators.get(professorId))){
 				System.out.println("ID Not Valid!");
-				System.out.print("ID of the Associated Professor: ");
-				professorId = scan.nextInt();
+				professorId = idConfirmation("Professor");
 			}
 			collaborators.get(professorId).addProduction(newProduction);
+			
 			int option = 1;
-			while(option == 1){
+			while(option == 1 && !students.isEmpty()){
 				System.out.println("\nAdd More Students?");
 				System.out.println("  1 - Yes");
 				System.out.println("  2 - No");
 				option = scan.nextInt();
 				if(option == 1){
 					printCollaboratorsByType("Student");
-					System.out.print("ID of the Associated Student: ");
-					int studentId = scan.nextInt();
+					int studentId = idConfirmation("Student");
 					while(!students.contains(collaborators.get(studentId))){
 						System.out.println("ID Not Valid!");
-						System.out.print("ID of the Associated Student: ");
-						studentId = scan.nextInt();
+						studentId = idConfirmation("Student");
 					}
 					collaborators.get(studentId).addProduction(newProduction);	
 				}
@@ -211,8 +226,7 @@ public class AcademicProductivity {
 				option = scan.nextInt();
 				if(option == 1){
 					printCollaborators();
-					System.out.print("ID of the Associated Collaborator: ");
-					int collabId = scan.nextInt();
+					int collabId = idConfirmation("Collaborator");
 					collaborators.get(collabId).addProduction(newProduction);	
 				}
 			}
@@ -239,10 +253,15 @@ public class AcademicProductivity {
 		
 	}
 	
-	public static void newStudent(){
+	public static void newStudent() throws InputMismatchException{
 		
 		System.out.println("Type of Student: \n  1 - Bachelor Student\n  2 - Master Student\n  3 - PhD Student");
-		Student newStudent = new Student(scan.nextInt());
+		int studentType = scan.nextInt();
+		while(studentType > 3 || studentType < 1){
+			System.out.println("Entry not valid, try again!\n");
+			return;
+		}
+		Student newStudent = new Student(studentType);
 		newStudent.setId(collaboratorCount);
 		collaboratorCount++;
 		System.out.print("Name: ");
@@ -272,7 +291,7 @@ public class AcademicProductivity {
 		
 	}
 	
-	public static void editProject(Integer projectId){
+	public static void editProject(Integer projectId) throws ArrayIndexOutOfBoundsException, InputMismatchException, IndexOutOfBoundsException{
 		if(projects.get(projectId).getStatus() == 1){
 			System.out.println("\nWhat would you like to edit?");
 			System.out.println("  1 - Title");
@@ -285,6 +304,7 @@ public class AcademicProductivity {
 			System.out.println("  8 - Add Collaborator");
 			System.out.println("  9 - Change Status");
 			System.out.println("  10 - Back");
+			
 		}
 		
 		else if(projects.get(projectId).getStatus() == 2){
@@ -324,7 +344,7 @@ public class AcademicProductivity {
 						projects.get(productions.get(productionId).getProjectId()).removeProduction(productions.get(productionId));
 						System.out.println("Production dissociated of it's old project and associated to the new one!");
 					}
-					else System.out.println("Production associated with the project!");
+					else System.out.println("Production associated to the project!");
 					productions.get(productionId).setProjectId(projectId);
 				}
 			}
@@ -425,6 +445,50 @@ public class AcademicProductivity {
 		System.out.println("Published Productions: "+(productionCount-supervisedProductionCount));
 		System.out.println("Supervised Productions: "+supervisedProductionCount);
 		System.out.println("");
+	}
+	
+	public static int idConfirmation(String type) throws InputMismatchException{
+		System.out.print("ID of the Associated "+type+": ");
+		int id = scan.nextInt();
+		while(id > collaboratorCount-1 || id < 0){
+			System.out.println("ID Not Valid!");
+			System.out.print("ID of the Associated "+type+": ");
+			id = scan.nextInt();
+		}
+		return id;
+	}
+	
+	public static int projectIdConfirmation() throws InputMismatchException{
+		System.out.print("ID of the Associated Project: ");
+		int id = scan.nextInt();
+		while(id > projectCount-1 || id < 0){
+			System.out.println("ID Not Valid!");
+			System.out.print("ID of the Associated Project: ");
+			id = scan.nextInt();
+		}
+		return id;
+	}
+	
+	public static int searchCollabIdConfirmation() throws InputMismatchException{
+		System.out.print("Collaborator's ID: ");
+		int id = scan.nextInt();
+		while(id > collaboratorCount-1 || id < 0){
+			System.out.println("ID Not Valid!");
+			System.out.print("Collaborator's ID: ");
+			id = scan.nextInt();
+		}
+		return id;
+	}
+	
+	public static int searchProjectIdConfirmation() throws InputMismatchException{
+		System.out.print("Project's ID: ");
+		int id = scan.nextInt();
+		while(id > projectCount-1 || id < 0){
+			System.out.println("ID Not Valid!");
+			System.out.print("Project's ID: ");
+			id = scan.nextInt();
+		}
+		return id;
 	}
 	
 	public static void printCollaborators(){
