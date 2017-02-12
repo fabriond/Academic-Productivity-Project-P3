@@ -42,7 +42,7 @@ public class AcademicProductivity {
 				}
 			
 				else if(menuOption == 1){
-					if(collaboratorCount == 0) System.out.println("You should add a collaborator first!");
+					if(professors.isEmpty()) System.out.println("You should add a professor first!");
 					else newProject();				
 				}
 				
@@ -50,8 +50,8 @@ public class AcademicProductivity {
 					if(projectCount == 0) System.out.println("You should create a project first!");
 					else {
 						printProjects(1, 2);
-						System.out.print("ID of the project you'd like to edit: ");
-						editProject(scan.nextInt());
+						int projectId = searchProjectIdConfirmation();
+						editProject(projectId);
 					}
 				}
 				
@@ -113,7 +113,6 @@ public class AcademicProductivity {
 			
 		}
 	
-	
 	}
 	
 	public static void newProject() throws ArrayIndexOutOfBoundsException, InputMismatchException, IndexOutOfBoundsException{
@@ -162,7 +161,13 @@ public class AcademicProductivity {
 			System.out.println("  2 - Supervised Production");
 			answer = scan.nextInt();
 		}		
-		if(answer == 2) supervisedProductionCount++;
+		if(answer == 2){
+			if(professors.isEmpty()){
+				System.out.println("No Professors, so supervised productions cannot be created!");
+				answer = 1;
+			}
+			else supervisedProductionCount++;
+		}
 		
 		Production newProduction = new Production();
 		newProduction.setId(productionCount);
@@ -195,7 +200,7 @@ public class AcademicProductivity {
 				}
 				
 				if(projects.get(projectId).addProduction(newProduction)){
-						newProduction.setProjectId(projectId);
+					newProduction.setProjectId(projectId);
 				}
 			}
 		}
@@ -284,7 +289,8 @@ public class AcademicProductivity {
 		int studentType = scan.nextInt();
 		while(studentType > 3 || studentType < 1){
 			System.out.println("Entry not valid, try again!\n");
-			return;
+			System.out.println("Type of Student: \n  1 - Bachelor Student\n  2 - Master Student\n  3 - PhD Student");
+			studentType = scan.nextInt();
 		}
 		Student newStudent = new Student(studentType);
 		newStudent.setId(collaboratorCount);
@@ -359,7 +365,7 @@ public class AcademicProductivity {
 			else if(answer == 2){
 				printProductions();
 				System.out.print("ID of the Associated Production: ");
-				int productionId = scan.nextInt();
+				int productionId = productionIdConfirmation();
 				while(!productions.contains(productions.get(productionId))){
 					System.out.println("ID Not Valid!");
 					System.out.print("ID of the Associated Production: ");
@@ -489,6 +495,17 @@ public class AcademicProductivity {
 		System.out.print("ID of the Associated Project: ");
 		int id = scan.nextInt();
 		while(id > projectCount-1 || id < 0){
+			System.out.println("ID Not Valid!");
+			System.out.print("ID of the Associated Project: ");
+			id = scan.nextInt();
+		}
+		return id;
+	}
+	
+	public static int productionIdConfirmation() throws InputMismatchException{
+		System.out.print("ID of the Associated Production: ");
+		int id = scan.nextInt();
+		while(id > productionCount-1 || id < 0){
 			System.out.println("ID Not Valid!");
 			System.out.print("ID of the Associated Project: ");
 			id = scan.nextInt();
