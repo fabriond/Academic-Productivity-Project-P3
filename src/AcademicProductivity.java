@@ -366,10 +366,7 @@ public class AcademicProductivity {
 				printProductions();
 				System.out.print("ID of the Associated Production: ");
 				int productionId = productionIdConfirmation();
-				while(!productions.contains(productions.get(productionId))){
-					System.out.println("ID Not Valid!");
-					productionId = productionIdConfirmation();
-				}
+				
 				if(projects.get(projectId).addProduction(productions.get(productionId))){
 					if(productions.get(productionId).getProjectId() != null){
 						projects.get(productions.get(productionId).getProjectId()).removeProduction(productions.get(productionId));
@@ -506,7 +503,7 @@ public class AcademicProductivity {
 		int id = scan.nextInt();
 		while(id > productionCount-1 || id < 0){
 			System.out.println("ID Not Valid!");
-			System.out.print("ID of the Associated Project: ");
+			System.out.print("ID of the Associated Production: ");
 			id = scan.nextInt();
 		}
 		return id;
