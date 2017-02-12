@@ -104,8 +104,14 @@ public class AcademicProductivity {
 				System.out.println("Date Format: DD/MM/YYYY\n");
 			}
 			catch(InputMismatchException | NumberFormatException e){
-				System.out.println("\nEntry not valid, try again!\n");
-				scan.nextLine();
+				if(!e.getMessage().equals("For input string: "+'"'+'"')){
+					System.out.println("\nEntry not valid, try again!\n");
+					scan.nextLine();
+				}
+				else{
+					System.out.println("\nInvalid Date Format!");
+					System.out.println("Date Format: DD/MM/YYYY\n");
+				}
 			}
 			catch(IndexOutOfBoundsException e){
 				System.out.println("\nID not valid, try again!\n");
@@ -364,7 +370,6 @@ public class AcademicProductivity {
 			}
 			else if(answer == 2){
 				printProductions();
-				System.out.print("ID of the Associated Production: ");
 				int productionId = productionIdConfirmation();
 				
 				if(projects.get(projectId).addProduction(productions.get(productionId))){
@@ -424,7 +429,7 @@ public class AcademicProductivity {
 			if(projects.get(projectId).statusToString().equals("In Preparation Phase")){
 				printCollaborators();
 				System.out.print("New Collaborator's ID: ");
-				int collabId = scan.nextInt();
+				int collabId = idConfirmation("Collaborator");
 				if(!collaborators.get(collabId).getType().equals("Student")){
 					
 					if(collaborators.get(collabId).addProject(projects.get(projectId))){
