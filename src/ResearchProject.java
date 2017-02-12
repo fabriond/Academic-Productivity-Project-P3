@@ -47,13 +47,15 @@ public class ResearchProject {
 		return startDate;
 	}
 
-	@SuppressWarnings("unused")
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 		String[] parts = startDate.split("/");
 		String day = parts[0];
 		String month = parts[1];
 		String year = parts[2];
+		Integer.parseInt(day);
+		Integer.parseInt(month);
+		Integer.parseInt(year);
 	}
 
 	public String getEndDate() {
@@ -119,17 +121,19 @@ public class ResearchProject {
 		else return "Concluded";
 	}
 	
-	public void changeStatus(){
+	public boolean changeStatus(){
 		if(this.status == 1 && professorCount >= 1){
 			this.status = 2;
 			System.out.println("Research Project In Development");
+			return true;
 		}
 		else if(this.status == 2 && !this.productions.isEmpty()){
 			this.status = 3;
 			System.out.println("Research Project Concluded");
+			return true;
 		}
 		else System.out.println("Project Status Cannot Be Changed");
-		return;
+		return false;
 	}
 	
 	public void addProfessor(Integer professorId){

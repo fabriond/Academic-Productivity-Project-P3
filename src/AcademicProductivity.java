@@ -46,7 +46,7 @@ public class AcademicProductivity {
 					else newProject();				
 				}
 				
-				else if(menuOption == 2 && projectCount > 0){
+				else if(menuOption == 2){
 					if(projectCount == 0) System.out.println("You should create a project first!");
 					else {
 						printProjects(1, 2);
@@ -96,20 +96,21 @@ public class AcademicProductivity {
 				}
 				
 				else if(menuOption != 10){
-					System.out.println("Entry not valid, try again!\n");
+					System.out.println("\nEntry not valid, try again!\n");
 				}
 			}
 			catch(ArrayIndexOutOfBoundsException e){
 				System.out.println("\nInvalid Date Format!");
 				System.out.println("Date Format: DD/MM/YYYY\n");
 			}
-			catch(InputMismatchException e){
+			catch(InputMismatchException | NumberFormatException e){
 				System.out.println("\nEntry not valid, try again!\n");
 				scan.nextLine();
 			}
 			catch(IndexOutOfBoundsException e){
 				System.out.println("\nID not valid, try again!\n");
 			}
+			
 		}
 	
 	
@@ -156,7 +157,10 @@ public class AcademicProductivity {
 		int answer = scan.nextInt();
 		while(answer != 1 && answer != 2){
 			System.out.println("Entry not valid, try again!\n");
-			return;
+			System.out.println("Production Type: ");
+			System.out.println("  1 - Published Production");
+			System.out.println("  2 - Supervised Production");
+			answer = scan.nextInt();
 		}		
 		if(answer == 2) supervisedProductionCount++;
 		
@@ -174,9 +178,16 @@ public class AcademicProductivity {
 			System.out.println("Is there a research project associated with this production?");
 			System.out.println("  1 - Yes");
 			System.out.println("  2 - No");
-			if(scan.nextInt() == 1){
+			int optionProject = scan.nextInt();
+			while(optionProject != 1 && optionProject != 2){
+				System.out.println("Entry not valid, try again!\n");
+				System.out.println("Is there a research project associated with this production?");
+				System.out.println("  1 - Yes");
+				System.out.println("  2 - No");
+				optionProject = scan.nextInt();
+			}
+			if(optionProject == 1){
 				printProjects(2);
-				System.out.print("ID of the Associated Project: ");
 				int projectId = projectIdConfirmation();
 				while(projects.get(projectId).getStatus() != 2){
 					System.out.println("Project Not Valid!");
@@ -205,6 +216,13 @@ public class AcademicProductivity {
 				System.out.println("  1 - Yes");
 				System.out.println("  2 - No");
 				option = scan.nextInt();
+				while(option != 1 && option != 2){
+					System.out.println("Entry not valid, try again!\n");
+					System.out.println("Add More Students?");
+					System.out.println("  1 - Yes");
+					System.out.println("  2 - No");
+					option = scan.nextInt();
+				}
 				if(option == 1){
 					printCollaboratorsByType("Student");
 					int studentId = idConfirmation("Student");
@@ -224,6 +242,13 @@ public class AcademicProductivity {
 				System.out.println("  1 - Yes");
 				System.out.println("  2 - No");
 				option = scan.nextInt();
+				while(option != 1 && option != 2){
+					System.out.println("Entry not valid, try again!\n");
+					System.out.println("Add More Collaborators?");
+					System.out.println("  1 - Yes");
+					System.out.println("  2 - No");
+					option = scan.nextInt();
+				}
 				if(option == 1){
 					printCollaborators();
 					int collabId = idConfirmation("Collaborator");
@@ -322,12 +347,13 @@ public class AcademicProductivity {
 		int answer = scan.nextInt();
 		
 		if(projects.get(projectId).getStatus() == 2){
-			if(answer == 1){
-				validProjects--;
-				projects.get(projectId).changeStatus();
-				ArrayList<Integer> studentIds = projects.get(projectId).getStudentsList();
-				for(int i = 0; i < studentIds.size(); i++){
-					((Student)collaborators.get(studentIds.get(i))).removeActiveProject();
+			if(answer == 1){	
+				if(projects.get(projectId).changeStatus()){
+					validProjects--;
+					ArrayList<Integer> studentIds = projects.get(projectId).getStudentsList();
+					for(int i = 0; i < studentIds.size(); i++){
+						((Student)collaborators.get(studentIds.get(i))).removeActiveProject();
+					}
 				}
 			}
 			else if(answer == 2){
@@ -417,8 +443,9 @@ public class AcademicProductivity {
 			else System.out.println("This project is no longer in preparation phase and cannot add more collaborators!");
 		}
 		else if(answer == 9){
-			projects.get(projectId).changeStatus();
-			validProjects++;
+			if(projects.get(projectId).changeStatus()){
+				validProjects++;	
+			}
 		}
 		
 	}
